@@ -3,6 +3,7 @@ plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.10'
     id 'org.beryx.jlink' version '2.24.1'
+    id "io.freefair.lombok" version "6.4.0"
 }
 
 group 'labelling'
@@ -24,8 +25,8 @@ tasks.withType(JavaCompile) {
 }
 
 application {
-    mainModule = 'labelling.datalabelling'
-    mainClass = 'labelling.datalabelling.HelloApplication'
+    mainModule = 'labelling'
+    mainClass = 'labelling.App'
 }
 
 javafx {
@@ -35,6 +36,7 @@ javafx {
 
 dependencies {
 
+    implementation 'org.projectlombok:lombok:1.18.22'
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }
