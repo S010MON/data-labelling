@@ -14,6 +14,7 @@ public class Display extends Canvas
 {
     @Getter private Image image;
     private ArrayList<BoundingBox> boxes;
+    private ArrayList<GuideLine> guideLines;
     private BoundingBox template;
 
     public Display(double width, double height)
@@ -22,9 +23,11 @@ public class Display extends Canvas
         image = null;
         template = null;
         boxes = new ArrayList<>();
+        guideLines = new ArrayList<>();
         setCursor(Cursor.CROSSHAIR);
-        setOnMouseDragged(e -> updateTemplate(e));
-        setOnMouseReleased(e -> addBoundingBox(e));
+        setOnMouseMoved(this::updateGuidelines);
+        setOnMouseDragged(this::updateTemplate);
+        setOnMouseReleased(this::addBoundingBox);
         draw();
     }
 
@@ -38,6 +41,7 @@ public class Display extends Canvas
             gc.drawImage(image, 0, 0);
 
         boxes.forEach(e -> e.draw(gc));
+        guideLines.forEach(e -> e.draw(gc));
 
         if(template != null)
             template.draw(gc);
@@ -49,7 +53,7 @@ public class Display extends Canvas
         draw();
     }
 
-    public void updateTemplate(MouseEvent e)
+    private void updateTemplate(MouseEvent e)
     {
         double x;
         double y;
@@ -70,15 +74,29 @@ public class Display extends Canvas
             h = e.getY() - y;
         }
         template = new BoundingBox(x, y, w, h);
+        updateGuidelines(e);
         draw();
     }
 
-    public void addBoundingBox(MouseEvent e)
+    private void addBoundingBox(MouseEvent e)
     {
         if(template == null)
             return;
         boxes.add(template);
         template = null;
+        draw();
+    }
+
+    private void updateGuidelines(MouseEvent e)
+    {
+        guideLines.clear();
+
+        GuideLine yLine = new GuideLine(0, e.getY(), getWidth(), e.getY());
+        guideLines.add(yLine);
+
+        GuideLine xLine = new GuideLine(e.getX(), 0, e.getX(), getHeight());
+        guideLines.add(xLine);
+
         draw();
     }
 }
