@@ -19,9 +19,8 @@ public class Display extends Canvas
     private ArrayList<GuideLine> guideLines;
     private BoundingBox template;
     private boolean dragImage = false;
-    private double zoomX = 1d;
-    private double zoomY = 1d;
-    private double zoomRate = 0.01;
+    private double zoom = 1d;
+    private double zoomRate = 0.02;
     private double offsetX = 0d;
     private double offsetY = 0d;
     private double shiftAmount = 20;
@@ -52,10 +51,10 @@ public class Display extends Canvas
             gc.drawImage(image,
                     offsetX,
                     offsetY,
-                    image.getWidth() * zoomX,
-                    image.getHeight() * zoomY);
+                    image.getWidth() * zoom,
+                    image.getHeight() * zoom);
 
-        boxes.forEach(e -> e.draw(gc, offsetX, offsetY, zoomX, zoomY));
+        boxes.forEach(e -> e.draw(gc, offsetX, offsetY, zoom));
         guideLines.forEach(e -> e.draw(gc));
 
         if(template != null)
@@ -111,10 +110,10 @@ public class Display extends Canvas
     {
         if(template == null)
             return;
-        BoundingBox scaled = new BoundingBox(template.getX()/zoomX,
-                                             template.getY() /zoomY,
-                                             template.getW() / zoomX,
-                                             template.getH() / zoomY);
+        BoundingBox scaled = new BoundingBox((template.getX() - offsetX) / zoom,
+                                             (template.getY()  - offsetY) / zoom,
+                                              template.getW() / zoom,
+                                              template.getH() / zoom);
         boxes.add(scaled);
         template = null;
         draw();
@@ -137,22 +136,15 @@ public class Display extends Canvas
     {
         double dy = e.getDeltaY();
         if(dy > 0)
-        {
-            zoomX += zoomRate;
-            zoomY += zoomRate;
-        }
+            zoom += zoomRate;
         else if(dy < 0)
-        {
-            zoomX -= zoomRate;
-            zoomY -= zoomRate;
-        }
+            zoom -= zoomRate;
         draw();
     }
 
     private void shiftUp()
     {
         offsetY = offsetY - shiftAmount;
-        System.out.println("w");
         draw();
     }
 
