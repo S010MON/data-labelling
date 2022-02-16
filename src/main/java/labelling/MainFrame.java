@@ -4,17 +4,18 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import lombok.Getter;
 
 import java.io.File;
 
 public class MainFrame extends BorderPane
 {
-    private Display display;
     private MenuBar menuBar;
+    @Getter private Display display;
+    @Getter private TemplatesPane menuPane;
 
     public MainFrame(double width, double height)
     {
@@ -24,6 +25,8 @@ public class MainFrame extends BorderPane
         display = new Display(width, height);
         setCenter(display);
 
+        menuPane = new TemplatesPane(this);
+        setLeft(menuPane);
     }
 
     private MenuBar generateMenuBar()
@@ -54,8 +57,5 @@ public class MainFrame extends BorderPane
         return new Image("file:"+file.getAbsolutePath());
     }
 
-    private void save()
-    {
-        return;
-    }
+    private void save() {}
 }
