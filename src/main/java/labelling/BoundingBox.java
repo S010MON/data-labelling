@@ -37,4 +37,18 @@ public class BoundingBox
         gc.setStroke(color);
         gc.strokeRect(x, y, w, h);
     }
+
+    public void draw(GraphicsContext gc, double offsetX, double offsetY)
+    {
+        gc.setStroke(color);
+        gc.strokeRect(x+offsetX, y+offsetY, w, h);
+    }
+
+    public void draw(GraphicsContext gc, double offsetX, double offsetY, double zoomX, double zoomY)
+    {
+        gc.setStroke(color);
+        double x = (this.x + offsetX) * zoomX;
+        double y = (this.y + offsetY) * zoomY;
+        gc.strokeRect(x, y, w*zoomX, h*zoomY);
+    }
 }
