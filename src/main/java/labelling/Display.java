@@ -17,6 +17,7 @@ public class Display extends Canvas
 {
     @Getter private Image image;
     @Setter private BoundingBox template;
+    private boolean drawingTemplate = false;
     private boolean usingTemplate = false;
     private ArrayList<BoundingBox> boxes;
     private ArrayList<GuideLine> guideLines;
@@ -100,6 +101,7 @@ public class Display extends Canvas
     {
         usingTemplate = true;
         template = new BoundingBox(0, 0, 50, 50);
+        template.setColor(Color.BLUE);
         draw();
     }
 
@@ -135,6 +137,7 @@ public class Display extends Canvas
             h = e.getY() - y;
         }
         template = new BoundingBox(x, y, w, h);
+        template.setColor(Color.BLUE);
         updateGuidelines(e);
         draw();
     }

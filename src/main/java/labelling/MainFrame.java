@@ -17,20 +17,23 @@ public class MainFrame extends BorderPane
     private MenuBar menuBar;
     @Getter private Display display;
     @Getter private SidePane menuPane;
+    @Getter private Introduction intro;
 
     public MainFrame(double width, double height)
     {
         menuBar = generateMenuBar();
         setTop(menuBar);
 
+        intro = new Introduction(width, height);
+
         display = new Display(width, height);
-        setCenter(display);
+        Image image = new Image(getClass().getClassLoader().getResourceAsStream("img_2.png"));
+        display.setImage(image);
 
         menuPane = new SidePane(this);
         setLeft(menuPane);
 
-        Image image = new Image(getClass().getClassLoader().getResourceAsStream("img_2.png"));
-        display.setImage(image);
+        gotoIntro();
     }
 
     private MenuBar generateMenuBar()
@@ -52,6 +55,17 @@ public class MainFrame extends BorderPane
         file.getItems().addAll(loadItem, saveItem, exitItem);
         return menuBar;
     }
+
+    private void gotoDisplay()
+    {
+        setCenter(display);
+    }
+
+    private void gotoIntro()
+    {
+        setCenter(intro);
+    }
+
 
     private Image loadImage()
     {

@@ -32,12 +32,6 @@ public class BoundingBox
         this.h = h;
     }
 
-    public void draw(GraphicsContext gc)
-    {
-        gc.setStroke(color);
-        gc.strokeRect(x, y, w, h);
-    }
-
     public void draw(GraphicsContext gc, double offsetX, double offsetY)
     {
         gc.setStroke(color);
