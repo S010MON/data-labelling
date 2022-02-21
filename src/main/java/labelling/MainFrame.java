@@ -11,13 +11,12 @@ import javafx.stage.Stage;
 import lombok.Getter;
 
 import java.io.File;
-import java.net.URL;
 
 public class MainFrame extends BorderPane
 {
     private MenuBar menuBar;
     @Getter private Display display;
-    @Getter private TemplatesPane menuPane;
+    @Getter private SidePane menuPane;
 
     public MainFrame(double width, double height)
     {
@@ -27,7 +26,7 @@ public class MainFrame extends BorderPane
         display = new Display(width, height);
         setCenter(display);
 
-        menuPane = new TemplatesPane(this);
+        menuPane = new SidePane(this);
         setLeft(menuPane);
 
         Image image = new Image(getClass().getClassLoader().getResourceAsStream("img_2.png"));

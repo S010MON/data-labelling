@@ -1,29 +1,29 @@
 package labelling;
 
+import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import java.util.ArrayList;
-
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
+import java.util.ArrayList;
 import lombok.Getter;
+import lombok.Setter;
 
 public class Display extends Canvas
 {
     @Getter private Image image;
+    @Setter private BoundingBox template;
     private ArrayList<BoundingBox> boxes;
     private ArrayList<GuideLine> guideLines;
-    private BoundingBox template;
-    private boolean dragImage = false;
     private double zoom = 1d;
     private double zoomRate = 0.02;
-    private double offsetX = 0d;
-    private double offsetY = 0d;
     private double shiftAmount = 20;
+    private Point2D lastMousePos = new Point2D(0,0);
+    private Point2D offset = new Point2D(0,0);
 
     public Display(double width, double height)
     {
@@ -33,11 +33,10 @@ public class Display extends Canvas
         boxes = new ArrayList<>();
         guideLines = new ArrayList<>();
         setCursor(Cursor.CROSSHAIR);
-        setOnMouseMoved(this::updateGuidelines);
+        setOnMouseMoved(this::handleMove);
         setOnMouseDragged(this::updateTemplate);
         setOnMouseReleased(this::addBoundingBox);
         setOnScroll(this::zoom);
-        setOnKeyPressed(this::handleKey);
         draw();
     }
 
@@ -48,13 +47,15 @@ public class Display extends Canvas
         gc.fillRect(0, 0, getWidth(), getHeight());
 
         if(image != null)
+        {
             gc.drawImage(image,
-                    offsetX,
-                    offsetY,
+                    offset.getX(),
+                    offset.getY(),
                     image.getWidth() * zoom,
                     image.getHeight() * zoom);
+        }
 
-        boxes.forEach(e -> e.draw(gc, offsetX, offsetY, zoom));
+        boxes.forEach(e -> e.draw(gc, offset.getX(), offset.getY(), zoom));
         guideLines.forEach(e -> e.draw(gc));
 
         if(template != null)
@@ -70,8 +71,6 @@ public class Display extends Canvas
 
     public void handleKey(KeyEvent e)
     {
-        dragImage = e.isShiftDown();
-
         switch (e.getText())
         {
             case "w" -> shiftUp();
@@ -81,12 +80,22 @@ public class Display extends Canvas
         }
     }
 
+    public void handleMove(MouseEvent e)
+    {
+        if(e.isShiftDown())
+        {
+            double dx = lastMousePos.getX() - e.getX();
+            double dy = lastMousePos.getY() - e.getY();
+            Point2D delta = new Point2D(dx, dy);
+            shift(delta);
+        }
+        lastMousePos = new Point2D(e.getX(), e.getY());
+        updateGuidelines(e);
+    }
+
     private void updateTemplate(MouseEvent e)
     {
-        double x;
-        double y;
-        double w;
-        double h;
+        double x, y, h, w;
         if(template == null)
         {
             x = e.getX();
@@ -110,8 +119,8 @@ public class Display extends Canvas
     {
         if(template == null)
             return;
-        BoundingBox scaled = new BoundingBox((template.getX() - offsetX) / zoom,
-                                             (template.getY()  - offsetY) / zoom,
+        BoundingBox scaled = new BoundingBox((template.getX() - offset.getX()) / zoom,
+                                             (template.getY()  - offset.getY()) / zoom,
                                               template.getW() / zoom,
                                               template.getH() / zoom);
         boxes.add(scaled);
@@ -144,25 +153,31 @@ public class Display extends Canvas
 
     private void shiftUp()
     {
-        offsetY = offsetY - shiftAmount;
+        offset = offset.subtract(new Point2D(0, shiftAmount));
         draw();
     }
 
     private void shiftDown()
     {
-        offsetY = offsetY + shiftAmount;
+        offset = offset.add(new Point2D(0, shiftAmount));
         draw();
     }
 
     private void shiftLeft()
     {
-        offsetX = offsetX - shiftAmount;
+        offset = offset.subtract(new Point2D(shiftAmount, 0));
         draw();
     }
 
     private void shiftRight()
     {
-        offsetX = offsetX + shiftAmount;
+        offset = offset.add(new Point2D(shiftAmount, 0));
+        draw();
+    }
+
+    private void shift(Point2D delta)
+    {
+        offset = offset.subtract(delta);
         draw();
     }
 }

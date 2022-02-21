@@ -5,9 +5,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-public class TemplatesPane extends VBox
+public class SidePane extends VBox
 {
-    public TemplatesPane(MainFrame mainFrame)
+    public SidePane(MainFrame mainFrame)
     {
         setPadding(new Insets(10));
         setSpacing(8);
@@ -16,6 +16,7 @@ public class TemplatesPane extends VBox
         getChildren().add(title);
 
         Button newTemplate = new Button("Set");
+        newTemplate.setOnAction(e -> System.out.println("set pressed"));
         getChildren().add(newTemplate);
     }
 
