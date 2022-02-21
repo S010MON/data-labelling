@@ -15,10 +15,12 @@ public class SidePane extends VBox
         Label title = new Label("Templates");
         getChildren().add(title);
 
-        Button newTemplate = new Button("Set");
-        newTemplate.setOnAction(e -> System.out.println("set pressed"));
-        getChildren().add(newTemplate);
+        Button setTemplate = new Button("Set");
+        setTemplate.setOnAction(e -> mainFrame.getDisplay().setTemplate());
+        getChildren().add(setTemplate);
+
+        Button cancelTemplate = new Button("Cancel");
+        cancelTemplate.setOnAction(e -> mainFrame.getDisplay().cancelTemplate());
+        getChildren().add(cancelTemplate);
     }
-
-
 }

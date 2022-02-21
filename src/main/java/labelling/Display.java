@@ -17,6 +17,7 @@ public class Display extends Canvas
 {
     @Getter private Image image;
     @Setter private BoundingBox template;
+    private boolean usingTemplate = false;
     private ArrayList<BoundingBox> boxes;
     private ArrayList<GuideLine> guideLines;
     private double zoom = 1d;
@@ -62,13 +63,6 @@ public class Display extends Canvas
             template.draw(gc, 0, 0);
     }
 
-    public void setImage(Image image)
-    {
-        boxes.clear();
-        this.image = image;
-        draw();
-    }
-
     public void handleKey(KeyEvent e)
     {
         switch (e.getText())
@@ -90,13 +84,43 @@ public class Display extends Canvas
             shift(delta);
         }
         lastMousePos = new Point2D(e.getX(), e.getY());
+        if(usingTemplate)
+            updateTemplate(e);
         updateGuidelines(e);
+    }
+
+    public void setImage(Image image)
+    {
+        boxes.clear();
+        this.image = image;
+        draw();
+    }
+
+    public void setTemplate()
+    {
+        usingTemplate = true;
+        template = new BoundingBox(0, 0, 50, 50);
+        draw();
+    }
+
+    public void cancelTemplate()
+    {
+        usingTemplate = false;
+        template = null;
+        draw();
     }
 
     private void updateTemplate(MouseEvent e)
     {
         double x, y, h, w;
-        if(template == null)
+        if(usingTemplate)
+        {
+            x = e.getX();
+            y = e.getY();
+            w = template.getW();
+            h = template.getH();
+        }
+        else if(template == null)
         {
             x = e.getX();
             y = e.getY();
@@ -124,7 +148,8 @@ public class Display extends Canvas
                                               template.getW() / zoom,
                                               template.getH() / zoom);
         boxes.add(scaled);
-        template = null;
+        if(!usingTemplate)
+            template = null;
         draw();
     }
 
@@ -151,33 +176,29 @@ public class Display extends Canvas
         draw();
     }
 
-    private void shiftUp()
-    {
-        offset = offset.subtract(new Point2D(0, shiftAmount));
-        draw();
-    }
-
-    private void shiftDown()
-    {
-        offset = offset.add(new Point2D(0, shiftAmount));
-        draw();
-    }
-
-    private void shiftLeft()
-    {
-        offset = offset.subtract(new Point2D(shiftAmount, 0));
-        draw();
-    }
-
-    private void shiftRight()
-    {
-        offset = offset.add(new Point2D(shiftAmount, 0));
-        draw();
-    }
-
     private void shift(Point2D delta)
     {
         offset = offset.subtract(delta);
         draw();
+    }
+
+    private void shiftUp()
+    {
+        shift(new Point2D(0, shiftAmount));
+    }
+
+    private void shiftDown()
+    {
+        shift(new Point2D(0, shiftAmount));
+    }
+
+    private void shiftLeft()
+    {
+        shift(new Point2D(shiftAmount, 0));
+    }
+
+    private void shiftRight()
+    {
+        shift(new Point2D(shiftAmount, 0));
     }
 }
