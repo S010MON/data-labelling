@@ -17,10 +17,14 @@ public class TopMenu extends MenuBar
     {
         super();
         this.mainFrame = mainFrame;
-        this.setBackground(BackGround.DARK_GREY);
 
         Menu file = new Menu("File");
-        getMenus().add(file);
+        file.setStyle("-fx-text-fill: green;");
+
+        Menu View = new Menu("View");
+        file.setStyle("-fx-text-fill: green;");
+
+        getMenus().addAll(file, View);
 
         loadItem = new MenuItem("Load");
         loadItem.setOnAction(e -> mainFrame.loadImage());

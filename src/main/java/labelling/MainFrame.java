@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import labelling.display.Display;
 import lombok.Getter;
 
 import java.io.File;
@@ -17,26 +18,26 @@ public class MainFrame extends BorderPane
     public MainFrame(double width, double height)
     {
         setTop(new TopMenu(this));
+        setBackground(BackGround.GREY_50);
 
-        intro = new Introduction(width, height);
+        intro = new Introduction(this);
 
         display = new Display(width, height);
-        Image image = new Image(getClass().getClassLoader().getResourceAsStream("img_2.png"));
+        Image image = new Image(getClass().getClassLoader().getResourceAsStream("img_9.png"));
         display.setImage(image);
 
         menuPane = new SidePane(this);
         setLeft(menuPane);
 
-        gotoDisplay();
+        gotoIntro();
     }
 
-
-    private void gotoDisplay()
+    public void gotoDisplay()
     {
         setCenter(display);
     }
 
-    private void gotoIntro()
+    public void gotoIntro()
     {
         setCenter(intro);
     }

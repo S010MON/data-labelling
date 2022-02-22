@@ -5,4 +5,6 @@ module labelling
     requires lombok;
     opens labelling to javafx.fxml;
     exports labelling;
+    exports labelling.display;
+    opens labelling.display to javafx.fxml;
 }

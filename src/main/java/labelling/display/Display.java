@@ -1,4 +1,4 @@
-package labelling;
+package labelling.display;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
@@ -9,6 +9,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
+
+import labelling.BackGround;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -43,7 +45,7 @@ public class Display extends Canvas
     public void draw()
     {
         GraphicsContext gc = this.getGraphicsContext2D();
-        gc.setFill(Color.BLACK);
+        gc.setFill(BackGround.grey50);
         gc.fillRect(0, 0, getWidth(), getHeight());
 
         if(image != null)
