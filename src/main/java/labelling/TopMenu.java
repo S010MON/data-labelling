@@ -17,6 +17,7 @@ public class TopMenu extends MenuBar
     {
         super();
         this.mainFrame = mainFrame;
+        this.setBackground(BackGround.DARK_GREY);
 
         Menu file = new Menu("File");
         getMenus().add(file);

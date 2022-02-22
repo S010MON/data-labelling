@@ -43,7 +43,7 @@ public class Display extends Canvas
     public void draw()
     {
         GraphicsContext gc = this.getGraphicsContext2D();
-        gc.setFill(Color.WHITE);
+        gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, getWidth(), getHeight());
 
         if(image != null)

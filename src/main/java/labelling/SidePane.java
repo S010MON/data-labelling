@@ -11,6 +11,7 @@ public class SidePane extends VBox
     {
         setPadding(new Insets(10));
         setSpacing(8);
+        setBackground(BackGround.GREY);
 
         Label title = new Label("Templates");
         getChildren().add(title);
