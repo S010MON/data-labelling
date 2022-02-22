@@ -9,29 +9,30 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
+import java.util.Stack;
 
 import labelling.BackGround;
 import lombok.Getter;
 import lombok.Setter;
 
-public class Display extends Canvas
+public class DisplayA extends Canvas
 {
     @Getter private Image image;
     @Setter private BoundingBox template;
     private boolean usingTemplate = false;
-    private ArrayList<BoundingBox> boxes;
+    private Stack<BoundingBox> stack;
     private ArrayList<GuideLine> guideLines;
     private double zoom = 1d;
     private double zoomRate = 0.02;
     private Point2D lastMousePos = new Point2D(0,0);
     private Point2D offset = new Point2D(0,0);
 
-    public Display(double width, double height)
+    public DisplayA(double width, double height)
     {
         super(width, height);
         image = null;
         template = null;
-        boxes = new ArrayList<>();
+        stack = new Stack<>();
         guideLines = new ArrayList<>();
         setCursor(Cursor.CROSSHAIR);
 
@@ -57,7 +58,7 @@ public class Display extends Canvas
                     image.getHeight() * zoom);
         }
 
-        boxes.forEach(e -> e.draw(gc, offset.getX(), offset.getY(), zoom));
+        stack.forEach(e -> e.draw(gc, offset.getX(), offset.getY(), zoom));
         guideLines.forEach(e -> e.draw(gc));
 
         if(template != null)
@@ -66,7 +67,7 @@ public class Display extends Canvas
 
     public void setImage(Image image)
     {
-        boxes.clear();
+        stack.clear();
         this.image = image;
         draw();
     }
@@ -83,6 +84,13 @@ public class Display extends Canvas
     {
         usingTemplate = false;
         template = null;
+        draw();
+    }
+
+    public void undo()
+    {
+        if(!stack.isEmpty())
+            stack.pop();
         draw();
     }
 
@@ -138,7 +146,7 @@ public class Display extends Canvas
                                              (template.getY()  - offset.getY()) / zoom,
                                               template.getW() / zoom,
                                               template.getH() / zoom);
-        boxes.add(scaled);
+        stack.push(scaled);
         if(!usingTemplate)
             template = null;
         draw();

@@ -26,11 +26,15 @@ public class SidePane extends VBox
         cancelTemplate.setOnAction(e -> mainFrame.getDisplay().cancelTemplate());
         cancelTemplate.setMinWidth(50);
 
+        Button undo = new Button("Undo");
+        undo.setOnAction(e -> mainFrame.getDisplay().undo());
+        undo.setMinWidth(50);
+
 
         Label ctrlTitle = new Label("Controls");
         ctrlTitle.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
 
 
-        getChildren().addAll(title, setTemplate, cancelTemplate, ctrlTitle);
+        getChildren().addAll(title, setTemplate, cancelTemplate, undo, ctrlTitle);
     }
 }
