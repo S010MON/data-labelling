@@ -22,5 +22,6 @@ public class SidePane extends VBox
         Button cancelTemplate = new Button("Cancel");
         cancelTemplate.setOnAction(e -> mainFrame.getDisplay().cancelTemplate());
         getChildren().add(cancelTemplate);
+
     }
 }

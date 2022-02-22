@@ -13,7 +13,6 @@ public class App extends Application
         MainFrame mainFrame = new MainFrame(getWidth(), getHeight());
         stage.setTitle("Satellite Image Labelling");
         Scene scene = new Scene(mainFrame,getWidth(), getHeight());
-        scene.setOnKeyPressed(mainFrame::handleKey);
         stage.setScene(scene);
         stage.show();
     }

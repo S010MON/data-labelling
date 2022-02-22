@@ -5,7 +5,6 @@ import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
@@ -17,13 +16,11 @@ public class Display extends Canvas
 {
     @Getter private Image image;
     @Setter private BoundingBox template;
-    private boolean drawingTemplate = false;
     private boolean usingTemplate = false;
     private ArrayList<BoundingBox> boxes;
     private ArrayList<GuideLine> guideLines;
     private double zoom = 1d;
     private double zoomRate = 0.02;
-    private double shiftAmount = 20;
     private Point2D lastMousePos = new Point2D(0,0);
     private Point2D offset = new Point2D(0,0);
 
@@ -35,7 +32,8 @@ public class Display extends Canvas
         boxes = new ArrayList<>();
         guideLines = new ArrayList<>();
         setCursor(Cursor.CROSSHAIR);
-        setOnMouseMoved(this::handleMove);
+
+        setOnMouseMoved(this::mouseMoved);
         setOnMouseDragged(this::updateTemplate);
         setOnMouseReleased(this::addBoundingBox);
         setOnScroll(this::zoom);
@@ -64,32 +62,6 @@ public class Display extends Canvas
             template.draw(gc, 0, 0);
     }
 
-    public void handleKey(KeyEvent e)
-    {
-        switch (e.getText())
-        {
-            case "w" -> shiftUp();
-            case "a" -> shiftLeft();
-            case "s" -> shiftDown();
-            case "d" -> shiftRight();
-        }
-    }
-
-    public void handleMove(MouseEvent e)
-    {
-        if(e.isShiftDown())
-        {
-            double dx = lastMousePos.getX() - e.getX();
-            double dy = lastMousePos.getY() - e.getY();
-            Point2D delta = new Point2D(dx, dy);
-            shift(delta);
-        }
-        lastMousePos = new Point2D(e.getX(), e.getY());
-        if(usingTemplate)
-            updateTemplate(e);
-        updateGuidelines(e);
-    }
-
     public void setImage(Image image)
     {
         boxes.clear();
@@ -110,6 +82,20 @@ public class Display extends Canvas
         usingTemplate = false;
         template = null;
         draw();
+    }
+
+    private void mouseMoved(MouseEvent e)
+    {
+        if (e.isShiftDown()) {
+            double dx = lastMousePos.getX() - e.getX();
+            double dy = lastMousePos.getY() - e.getY();
+            Point2D delta = new Point2D(dx, dy);
+            shift(delta);
+        }
+        lastMousePos = new Point2D(e.getX(), e.getY());
+        if (usingTemplate)
+            updateTemplate(e);
+        updateGuidelines(e);
     }
 
     private void updateTemplate(MouseEvent e)
@@ -183,25 +169,5 @@ public class Display extends Canvas
     {
         offset = offset.subtract(delta);
         draw();
-    }
-
-    private void shiftUp()
-    {
-        shift(new Point2D(0, shiftAmount));
-    }
-
-    private void shiftDown()
-    {
-        shift(new Point2D(0, shiftAmount));
-    }
-
-    private void shiftLeft()
-    {
-        shift(new Point2D(shiftAmount, 0));
-    }
-
-    private void shiftRight()
-    {
-        shift(new Point2D(shiftAmount, 0));
     }
 }
