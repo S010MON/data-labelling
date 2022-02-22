@@ -23,7 +23,7 @@ public class MainFrame extends BorderPane
         intro = new Introduction(this);
 
         display = new DisplayA(width, height);
-        Image image = new Image(getClass().getClassLoader().getResourceAsStream("img_9.png"));
+        Image image = new Image(getClass().getClassLoader().getResourceAsStream("img_6.png"));
         display.setImage(image);
 
         menuPane = new SidePane(this);

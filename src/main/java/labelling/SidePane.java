@@ -5,6 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 public class SidePane extends VBox
 {
@@ -33,8 +34,10 @@ public class SidePane extends VBox
 
         Label ctrlTitle = new Label("Controls");
         ctrlTitle.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
+        Text ctrls = new Text("SHIFT - Move image\n" +
+                              "SCROLL - Zoom in and out\n");
+        ctrls.setStyle("-fx-text-fill: white;");
 
-
-        getChildren().addAll(title, setTemplate, cancelTemplate, undo, ctrlTitle);
+        getChildren().addAll(title, setTemplate, cancelTemplate, undo, ctrlTitle, ctrls);
     }
 }
