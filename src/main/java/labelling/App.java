@@ -2,6 +2,9 @@ package labelling;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 
 public class App extends Application
@@ -13,6 +16,11 @@ public class App extends Application
         stage.setTitle("Satellite Image Labelling");
         Scene scene = new Scene(mainFrame,getWidth(), getHeight());
         stage.setScene(scene);
+
+        KeyCombination ctrlZ = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
+        Runnable r = () -> mainFrame.getDisplay().undo();
+        scene.getAccelerators().put(ctrlZ, r);
+
         stage.show();
     }
 
