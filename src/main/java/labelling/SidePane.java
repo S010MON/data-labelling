@@ -20,7 +20,7 @@ public class SidePane extends VBox
         title.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
 
         Button setTemplate = new Button("Set");
-        setTemplate.setOnAction(e -> mainFrame.getDisplay().setTemplate());
+        setTemplate.setOnAction(e -> mainFrame.getDisplay().drawTemplate());
         setTemplate.setMinWidth(50);
 
         Button cancelTemplate = new Button("Clear");
@@ -30,7 +30,6 @@ public class SidePane extends VBox
         Button undo = new Button("Undo");
         undo.setOnAction(e -> mainFrame.getDisplay().undo());
         undo.setMinWidth(50);
-
 
         Label ctrlTitle = new Label("Controls");
         ctrlTitle.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");

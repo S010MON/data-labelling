@@ -19,11 +19,13 @@ public class DisplayA extends Canvas
 {
     @Getter private Image image;
     @Setter private BoundingBox template;
+    private boolean drawingTemplate = false;
     private boolean usingTemplate = false;
     private Stack<BoundingBox> stack;
     private ArrayList<GuideLine> guideLines;
     private double zoom = 1d;
     private double zoomRate = 0.02;
+    private Point2D click;
     private Point2D lastMousePos = new Point2D(0,0);
     private Point2D offset = new Point2D(0,0);
 
@@ -37,8 +39,9 @@ public class DisplayA extends Canvas
         setCursor(Cursor.CROSSHAIR);
 
         setOnMouseMoved(this::mouseMoved);
-        setOnMouseDragged(this::updateTemplate);
-        setOnMouseReleased(this::addBoundingBox);
+        setOnMousePressed(this::mousePressed);
+        setOnMouseDragged(this::mouseDragged);
+        setOnMouseReleased(this::mouseReleased);
         setOnScroll(this::zoom);
         draw();
     }
@@ -72,14 +75,6 @@ public class DisplayA extends Canvas
         draw();
     }
 
-    public void setTemplate()
-    {
-        usingTemplate = true;
-        template = new BoundingBox(0, 0, 50, 50);
-        template.setColor(Color.BLUE);
-        draw();
-    }
-
     public void cancelTemplate()
     {
         usingTemplate = false;
@@ -94,61 +89,61 @@ public class DisplayA extends Canvas
         draw();
     }
 
+    public void drawTemplate()
+    {
+        drawingTemplate = true;
+        usingTemplate = false;
+    }
+
     private void mouseMoved(MouseEvent e)
     {
-        if (e.isShiftDown()) {
+        System.out.println("Mouse Moved");
+        if (e.isShiftDown())
+        {
             double dx = lastMousePos.getX() - e.getX();
             double dy = lastMousePos.getY() - e.getY();
             Point2D delta = new Point2D(dx, dy);
             shift(delta);
         }
         lastMousePos = new Point2D(e.getX(), e.getY());
-        if (usingTemplate)
-            updateTemplate(e);
-        updateGuidelines(e);
-    }
 
-    private void updateTemplate(MouseEvent e)
-    {
-        double x, y, h, w;
-        if(usingTemplate)
-        {
-            x = e.getX();
-            y = e.getY();
-            w = template.getW();
-            h = template.getH();
-        }
-        else if(template == null)
-        {
-            x = e.getX();
-            y = e.getY();
-            w = 1;
-            h = 1;
-        }
-        else
-        {
-            x = template.getX();
-            y = template.getY();
-            w = e.getX() - x;
-            h = e.getY() - y;
-        }
-        template = new BoundingBox(x, y, w, h);
-        template.setColor(Color.BLUE);
+        if (usingTemplate)
+            updateTemplate(e.getX(), e.getY());
         updateGuidelines(e);
         draw();
     }
 
-    private void addBoundingBox(MouseEvent e)
+    private void mousePressed(MouseEvent e)
     {
-        if(template == null)
-            return;
-        BoundingBox scaled = new BoundingBox((template.getX() - offset.getX()) / zoom,
-                                             (template.getY()  - offset.getY()) / zoom,
-                                              template.getW() / zoom,
-                                              template.getH() / zoom);
+        System.out.println("Mouse pressed at: " + e.getX() + " " + e.getY());
+        click = new Point2D(e.getX(), e.getY());
+    }
+
+    private void mouseDragged(MouseEvent e)
+    {
+        System.out.println("Mouse dragged");
+        template = new BoundingBox(click.getX(), click.getY(), e.getX() - click.getX(), e.getY() - click.getY());
+        template.setColor(Color.BLUE);
+
+        updateGuidelines(e);
+        draw();
+    }
+
+    private void mouseReleased(MouseEvent e)
+    {
+        System.out.println("Mouse released");
+        double x = click.getX();
+        double y = click.getY();
+        double w = e.getX() - click.getX();
+        double h = e.getY() - click.getY();
+
+        BoundingBox scaled = new BoundingBox((x - offset.getX()) / zoom,
+                                             (y  - offset.getY()) / zoom,
+                                              w / zoom,
+                                              h / zoom);
         stack.push(scaled);
-        if(!usingTemplate)
-            template = null;
+        click = new Point2D(0,0);
+        template = null;
         draw();
     }
 
@@ -163,6 +158,11 @@ public class DisplayA extends Canvas
         guideLines.add(xLine);
 
         draw();
+    }
+
+    public void updateTemplate(double x, double y)
+    {
+        template = new BoundingBox(x, y, template.getW(), template.getH());
     }
 
     private void zoom(ScrollEvent e)
