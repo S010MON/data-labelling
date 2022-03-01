@@ -97,7 +97,6 @@ public class DisplayA extends Canvas
 
     private void mouseMoved(MouseEvent e)
     {
-        System.out.println("Mouse Moved");
         if (e.isShiftDown())
         {
             double dx = lastMousePos.getX() - e.getX();
@@ -115,13 +114,11 @@ public class DisplayA extends Canvas
 
     private void mousePressed(MouseEvent e)
     {
-        System.out.println("Mouse pressed at: " + e.getX() + " " + e.getY());
         click = new Point2D(e.getX(), e.getY());
     }
 
     private void mouseDragged(MouseEvent e)
     {
-        System.out.println("Mouse dragged");
         template = new BoundingBox(click.getX(), click.getY(), e.getX() - click.getX(), e.getY() - click.getY());
         template.setColor(Color.BLUE);
 
@@ -131,16 +128,12 @@ public class DisplayA extends Canvas
 
     private void mouseReleased(MouseEvent e)
     {
-        System.out.println("Mouse released");
-        double x = click.getX();
-        double y = click.getY();
-        double w = e.getX() - click.getX();
-        double h = e.getY() - click.getY();
+        double x = (click.getX() - offset.getX()) / zoom;
+        double y = (click.getY()  - offset.getY()) / zoom;
+        double w = e.getX() - click.getX() / zoom;
+        double h = e.getY() - click.getY() / zoom;
+        BoundingBox scaled = new BoundingBox(x, y, w, h);
 
-        BoundingBox scaled = new BoundingBox((x - offset.getX()) / zoom,
-                                             (y  - offset.getY()) / zoom,
-                                              w / zoom,
-                                              h / zoom);
         stack.push(scaled);
         click = new Point2D(0,0);
         template = null;

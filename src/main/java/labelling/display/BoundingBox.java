@@ -30,6 +30,18 @@ public class BoundingBox
         this.y = y;
         this.w = w;
         this.h = h;
+
+        if (w < 0)
+        {
+            this.x = x + w;
+            this.w = Math.abs(w);
+        }
+
+        if (h < 0)
+        {
+            this.y = y + h;
+            this.h = Math.abs(h);
+        }
     }
 
     public void draw(GraphicsContext gc, double offsetX, double offsetY)
