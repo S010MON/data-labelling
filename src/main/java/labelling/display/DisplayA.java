@@ -119,9 +119,11 @@ public class DisplayA extends Canvas
 
     private void mouseDragged(MouseEvent e)
     {
-        template = new BoundingBox(click.getX(), click.getY(), e.getX() - click.getX(), e.getY() - click.getY());
-        template.setColor(Color.BLUE);
-
+        if(!usingTemplate)
+        {
+            template = new BoundingBox(click.getX(), click.getY(), e.getX() - click.getX(), e.getY() - click.getY());
+            template.setColor(Color.BLUE);
+        }
         updateGuidelines(e);
         draw();
     }
@@ -132,11 +134,25 @@ public class DisplayA extends Canvas
         double y = (click.getY()  - offset.getY()) / zoom;
         double w = e.getX() - click.getX() / zoom;
         double h = e.getY() - click.getY() / zoom;
-        BoundingBox scaled = new BoundingBox(x, y, w, h);
+        BoundingBox template = new BoundingBox(x, y, w, h);
 
-        stack.push(scaled);
-        click = new Point2D(0,0);
-        template = null;
+        if(drawingTemplate)
+        {
+            stack.push(template);
+            this.template = template;
+            usingTemplate = true;
+            drawingTemplate = false;
+        }
+        else if(usingTemplate)
+        {
+            stack.push(this.template);
+        }
+        else
+        {
+            stack.push(template);
+            this.template = null;
+            click = new Point2D(0,0);
+        }
         draw();
     }
 
