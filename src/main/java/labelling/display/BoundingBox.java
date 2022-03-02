@@ -57,4 +57,26 @@ public class BoundingBox
         double y = (this.y * zoom) + offsetY;
         gc.strokeRect(x, y, w * zoom, h * zoom);
     }
+
+    public double area()
+    {
+        return this.h * this.w;
+    }
+
+    public double IoU(BoundingBox other)
+    {
+        /* Intersection */
+        double x_inter_min = Math.max(this.getX(), other.getX());
+        double y_inter_min = Math.max(this.getY(), other.getY());
+        double x_inter_max = Math.min(this.getX() + this.getW(), other.getX()  + this.getW());
+        double y_inter_max = Math.min(this.getY() + this.getH(), other.getY()  + this.getH());
+        double width = Math.abs(x_inter_max - x_inter_min);
+        double height = Math.abs(y_inter_max - y_inter_min);
+        double inter_area = width * height;
+
+        /* Union */
+        double union_area = this.area() + other.area() - inter_area; // Inter area removed for double counting
+
+        return inter_area / union_area;
+    }
 }
