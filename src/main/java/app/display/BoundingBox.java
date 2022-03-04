@@ -65,6 +65,9 @@ public class BoundingBox
 
     public double IoU(BoundingBox other)
     {
+        if(!overlap(other))
+            return 0;
+
         /* Intersection */
         double x_inter_min = Math.max(this.getX(), other.getX());
         double y_inter_min = Math.max(this.getY(), other.getY());
@@ -75,8 +78,35 @@ public class BoundingBox
         double inter_area = width * height;
 
         /* Union */
-        double union_area = this.area() + other.area() - inter_area; // Inter area removed for double counting
+        double union_area = this.area() + other.area();
+
+        if(inter_area > 0)
+            union_area -= inter_area; // Inter area removed for double counting
 
         return inter_area / union_area;
+    }
+
+    public boolean overlap(BoundingBox other)
+    {
+        if(inside(other.x, other.y))
+            return true;
+
+        if(inside(other.x, other.y + other.w))
+            return true;
+
+        if(inside(other.x + other.w, other.y))
+            return true;
+
+        if(inside(other.x + other.w, other.y + other.w))
+            return true;
+
+        return false;
+    }
+
+    public boolean inside(double pointX, double pointY)
+    {
+        if(x <= pointX && pointX <= (x + w) && y <= pointY && pointY <= (y + w))
+            return true;
+        return false;
     }
 }

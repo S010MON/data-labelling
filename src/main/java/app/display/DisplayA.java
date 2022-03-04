@@ -119,6 +119,7 @@ public class DisplayA extends Canvas
 
     private void mouseDragged(MouseEvent e)
     {
+        System.out.println(e.getX() + " " + e.getY());
         if(!usingTemplate)
         {
             template = new BoundingBox(click.getX(), click.getY(), e.getX() - click.getX(), e.getY() - click.getY());
@@ -132,8 +133,8 @@ public class DisplayA extends Canvas
     {
         double x = (click.getX() - offset.getX()) / zoom;
         double y = (click.getY()  - offset.getY()) / zoom;
-        double w = e.getX() - click.getX() / zoom;
-        double h = e.getY() - click.getY() / zoom;
+        double w = (e.getX() - click.getX())/ zoom;
+        double h = (e.getY() - click.getY()) / zoom;
         BoundingBox template = new BoundingBox(x, y, w, h);
 
         if(drawingTemplate)
