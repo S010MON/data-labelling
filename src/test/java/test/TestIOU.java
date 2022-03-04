@@ -1,3 +1,5 @@
+package test;
+
 import app.display.BoundingBox;
 import org.junit.jupiter.api.Test;
 
