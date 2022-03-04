@@ -6,7 +6,6 @@ plugins {
     id "io.freefair.lombok" version "6.4.0"
 }
 
-group 'labelling'
 version '1.0-SNAPSHOT'
 
 repositories {
@@ -25,8 +24,8 @@ tasks.withType(JavaCompile) {
 }
 
 application {
-    mainModule = 'labelling'
-    mainClass = 'labelling.App'
+    mainModule = 'app'
+    mainClass = 'app.App'
 }
 
 javafx {

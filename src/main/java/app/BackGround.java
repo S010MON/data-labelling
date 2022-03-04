@@ -1,4 +1,4 @@
-package labelling;
+package app;
 
 import javafx.geometry.Insets;
 import javafx.scene.layout.Background;

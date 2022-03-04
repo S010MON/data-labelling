@@ -1,9 +1,11 @@
-module labelling
+module app
 {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.desktop;
     requires lombok;
-    opens labelling to javafx.fxml;
-    exports labelling;
-    exports labelling.display;
+    opens app to javafx.fxml;
+    exports app;
+    exports app.display;
+    opens app.display to javafx.fxml;
 }

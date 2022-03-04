@@ -1,4 +1,4 @@
-package labelling.display;
+package app.display;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.Stack;
 
-import labelling.BackGround;
+import app.BackGround;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,4 +1,4 @@
-package labelling.display;
+package app.display;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;

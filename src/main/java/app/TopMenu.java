@@ -1,4 +1,4 @@
-package labelling;
+package app;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
