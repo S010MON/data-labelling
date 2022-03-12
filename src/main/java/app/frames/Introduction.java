@@ -1,4 +1,4 @@
-package app;
+package app.frames;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -24,7 +24,7 @@ public class Introduction extends VBox
                 " -fx-text-fill: #003308;" +
                 " -fx-font-weight: bold;" +
                 " -fx-font-size:  24 px;");
-        start.setOnAction(e -> mainFrame.gotoDisplay());
+        start.setOnAction(e -> mainFrame.start());
         getChildren().addAll(para1, example, para2, start);
 
     }

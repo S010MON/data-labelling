@@ -10,18 +10,19 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.Stack;
-
-import app.BackGround;
+import app.logging.Logger;
 import lombok.Getter;
 import lombok.Setter;
 
-public class DisplayA extends Canvas
+public class Display extends Canvas
 {
     @Getter private Image image;
     @Setter private BoundingBox template;
+    @Getter private int fileID;
+    private Stack<BoundingBox> boxes;
     private boolean drawingTemplate = false;
     private boolean usingTemplate = false;
-    private Stack<BoundingBox> stack;
+    private boolean featuresEnabled;
     private ArrayList<GuideLine> guideLines;
     private double zoom = 1d;
     private double zoomRate = 0.02;
@@ -29,13 +30,16 @@ public class DisplayA extends Canvas
     private Point2D lastMousePos = new Point2D(0,0);
     private Point2D offset = new Point2D(0,0);
 
-    public DisplayA(double width, double height)
+
+    public Display(double width, double height, boolean featuresEnabled, int fileID)
     {
         super(width, height);
         image = null;
         template = null;
-        stack = new Stack<>();
+        boxes = new Stack<>();
         guideLines = new ArrayList<>();
+        this.fileID = fileID;
+        this.featuresEnabled = featuresEnabled;
         setCursor(Cursor.CROSSHAIR);
 
         setOnMouseMoved(this::mouseMoved);
@@ -61,7 +65,7 @@ public class DisplayA extends Canvas
                     image.getHeight() * zoom);
         }
 
-        stack.forEach(e -> e.draw(gc, offset.getX(), offset.getY(), zoom));
+        boxes.forEach(e -> e.draw(gc, offset.getX(), offset.getY(), zoom));
         guideLines.forEach(e -> e.draw(gc));
 
         if(template != null)
@@ -70,7 +74,7 @@ public class DisplayA extends Canvas
 
     public void setImage(Image image)
     {
-        stack.clear();
+        boxes.clear();
         this.image = image;
         draw();
     }
@@ -84,8 +88,8 @@ public class DisplayA extends Canvas
 
     public void undo()
     {
-        if(!stack.isEmpty())
-            stack.pop();
+        if(!boxes.isEmpty())
+            boxes.pop();
         draw();
     }
 
@@ -93,6 +97,19 @@ public class DisplayA extends Canvas
     {
         drawingTemplate = true;
         usingTemplate = false;
+    }
+
+    public void printBoundingBoxes()
+    {
+        Logger logger = new Logger("ans_4.txt");
+        boxes.forEach(e -> logger.log(e.toString()));
+    }
+
+    public ArrayList<BoundingBox> getBoxes()
+    {
+        ArrayList<BoundingBox> out = new ArrayList<>();
+        boxes.forEach(e -> out.add(e));
+        return out;
     }
 
     private void mouseMoved(MouseEvent e)
@@ -119,7 +136,6 @@ public class DisplayA extends Canvas
 
     private void mouseDragged(MouseEvent e)
     {
-        System.out.println(e.getX() + " " + e.getY());
         if(!usingTemplate)
         {
             template = new BoundingBox(click.getX(), click.getY(), e.getX() - click.getX(), e.getY() - click.getY());
@@ -139,18 +155,18 @@ public class DisplayA extends Canvas
 
         if(drawingTemplate)
         {
-            stack.push(template);
+            boxes.push(template);
             this.template = template;
             usingTemplate = true;
             drawingTemplate = false;
         }
         else if(usingTemplate)
         {
-            stack.push(this.template);
+            boxes.push(this.template);
         }
         else
         {
-            stack.push(template);
+            boxes.push(template);
             this.template = null;
             click = new Point2D(0,0);
         }
@@ -159,18 +175,21 @@ public class DisplayA extends Canvas
 
     private void updateGuidelines(MouseEvent e)
     {
-        guideLines.clear();
+        if(featuresEnabled)
+        {
+            guideLines.clear();
 
-        GuideLine yLine = new GuideLine(0, e.getY(), getWidth(), e.getY());
-        guideLines.add(yLine);
+            GuideLine yLine = new GuideLine(0, e.getY(), getWidth(), e.getY());
+            guideLines.add(yLine);
 
-        GuideLine xLine = new GuideLine(e.getX(), 0, e.getX(), getHeight());
-        guideLines.add(xLine);
+            GuideLine xLine = new GuideLine(e.getX(), 0, e.getX(), getHeight());
+            guideLines.add(xLine);
 
-        draw();
+            draw();
+        }
     }
 
-    public void updateTemplate(double x, double y)
+    private void updateTemplate(double x, double y)
     {
         template = new BoundingBox(x, y, template.getW(), template.getH());
     }

@@ -1,4 +1,4 @@
-package app;
+package app.frames;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -29,7 +29,7 @@ public class TopMenu extends MenuBar
         loadItem = new MenuItem("Load");
         loadItem.setOnAction(e -> mainFrame.loadImage());
         saveItem = new MenuItem("Save");
-        saveItem.setOnAction(e -> mainFrame.save());
+        saveItem.setOnAction(e -> mainFrame.getDisplay().printBoundingBoxes());
         exitItem = new MenuItem("Exit");
         exitItem.setOnAction(e -> System.exit(0));
 

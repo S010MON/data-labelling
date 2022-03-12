@@ -1,4 +1,4 @@
-package app;
+package app.display;
 
 import javafx.geometry.Insets;
 import javafx.scene.layout.Background;

@@ -5,4 +5,7 @@ module app
     requires java.desktop;
     requires lombok;
     exports app;
+    exports app.logging;
+    exports app.frames;
+    exports app.display;
 }

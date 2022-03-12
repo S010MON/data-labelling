@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@ToString
 public class BoundingBox
 {
     @Setter @Getter private Color color;
@@ -63,8 +62,24 @@ public class BoundingBox
         return this.h * this.w;
     }
 
+    @Override
+    public String toString()
+    {
+        return x + " " + y + " " + h + " " + w;
+    }
+
     public double IoU(BoundingBox other)
     {
+        if(this.contains(other))
+        {
+            assert other.area() / this.area() < 1;
+            return other.area() / this.area();
+        }
+        if(other.contains(this))
+        {
+            assert this.area() / other.area() < 1;
+            return this.area() / other.area();
+        }
         if(!overlap(other))
             return 0;
 
@@ -103,7 +118,15 @@ public class BoundingBox
         return false;
     }
 
-    public boolean inside(double pointX, double pointY)
+    private boolean contains(BoundingBox other)
+    {
+        return inside(other.x, other.y) &&
+               inside(other.x + other.w, other.y) &&
+               inside(other.x, other.y + other.h) &&
+               inside(other.x + other.w, other.y + other.h);
+    }
+
+    private boolean inside(double pointX, double pointY)
     {
         if(x <= pointX && pointX <= (x + w) && y <= pointY && pointY <= (y + w))
             return true;

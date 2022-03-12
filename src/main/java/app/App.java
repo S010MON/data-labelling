@@ -1,5 +1,6 @@
 package app;
 
+import app.frames.MainFrame;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
