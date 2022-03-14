@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+
 public class SidePane extends VBox
 {
     private final boolean admin = false;
@@ -29,12 +30,14 @@ public class SidePane extends VBox
         getChildren().add(title);
 
         setTemplate = new Button("Set");
-        setTemplate.setOnAction(e -> mainFrame.getDisplay().drawTemplate());
+        setTemplate.setOnAction(e -> {mainFrame.getDisplay().drawTemplate();
+                                      setActive();});
         setTemplate.setMinWidth(50);
         getChildren().add(setTemplate);
 
         cancelTemplate = new Button("Clear");
-        cancelTemplate.setOnAction(e -> mainFrame.getDisplay().cancelTemplate());
+        cancelTemplate.setOnAction(e -> {mainFrame.getDisplay().cancelTemplate();
+                                         setDisabled();});
         cancelTemplate.setMinWidth(50);
         getChildren().add(cancelTemplate);
 
@@ -44,8 +47,9 @@ public class SidePane extends VBox
 
         Label ctrlTitle = new Label("Controls");
         ctrlTitle.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
-        Text ctrls = new Text("SHIFT - Move image\n" +
-                              "SCROLL - Zoom in and out\n");
+        Text ctrls = new Text("Click SET to draw\na new template\n" +
+                "Press SHIFT and\n move mouse\n" +
+                              "to move image\n");
         ctrls.setStyle("-fx-text-fill: white;");
 
         Button end = new Button("FINISH");
@@ -78,5 +82,17 @@ public class SidePane extends VBox
         setTemplate.setStyle("-fx-background-color: grey;");
         cancelTemplate.setOnAction((e -> e.consume()));
         cancelTemplate.setStyle("-fx-background-color: grey;");
+    }
+
+    public void setActive()
+    {
+        if(setTemplate != null)
+            setTemplate.setStyle("-fx-background-color: blue;");
+    }
+
+    public void setDisabled()
+    {
+        if(setTemplate != null)
+            setTemplate.setStyle("-fx-background-color: white;");
     }
 }

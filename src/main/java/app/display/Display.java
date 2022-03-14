@@ -30,7 +30,6 @@ public class Display extends Canvas
     private Point2D lastMousePos = new Point2D(0,0);
     private Point2D offset = new Point2D(0,0);
 
-
     public Display(double width, double height, boolean featuresEnabled, int fileID)
     {
         super(width, height);
@@ -162,7 +161,11 @@ public class Display extends Canvas
         }
         else if(usingTemplate)
         {
-            boxes.push(this.template);
+            BoundingBox temp = new BoundingBox(e.getX() - offset.getX(),
+                                               e.getY() - offset.getY(),
+                                               this.template.getW(),
+                                               this.template.getH());
+            boxes.push(temp);
         }
         else
         {
@@ -196,12 +199,12 @@ public class Display extends Canvas
 
     private void zoom(ScrollEvent e)
     {
-        double dy = e.getDeltaY();
-        if(dy > 0)
-            zoom += zoomRate;
-        else if(dy < 0)
-            zoom -= zoomRate;
-        draw();
+//        double dy = e.getDeltaY();
+//        if(dy > 0)
+//            zoom += zoomRate;
+//        else if(dy < 0)
+//            zoom -= zoomRate;
+//        draw();
     }
 
     private void shift(Point2D delta)
