@@ -41,8 +41,8 @@ public class MainFrame extends BorderPane
         logger.setOutputCsv();
         logger.setPrependDateTime(true);
 
-        gridEnabled = Math.random() > 0.5;
-        tempEnabled = Math.random() > 0.5;
+        gridEnabled = Math.random() > 0;
+        tempEnabled = Math.random() > 0;
         if(tempEnabled)
             sidePane.enableTemplates();
         else
