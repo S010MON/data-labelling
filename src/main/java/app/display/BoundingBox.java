@@ -4,7 +4,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 public class BoundingBox
 {
@@ -71,15 +70,11 @@ public class BoundingBox
     public double IoU(BoundingBox other)
     {
         if(this.contains(other))
-        {
-            assert other.area() / this.area() < 1;
             return other.area() / this.area();
-        }
+
         if(other.contains(this))
-        {
-            assert this.area() / other.area() < 1;
             return this.area() / other.area();
-        }
+
         if(!overlap(other))
             return 0;
 
@@ -112,10 +107,7 @@ public class BoundingBox
         if(inside(other.x + other.w, other.y))
             return true;
 
-        if(inside(other.x + other.w, other.y + other.w))
-            return true;
-
-        return false;
+        return inside(other.x + other.w, other.y + other.w);
     }
 
     private boolean contains(BoundingBox other)
@@ -128,8 +120,6 @@ public class BoundingBox
 
     private boolean inside(double pointX, double pointY)
     {
-        if(x <= pointX && pointX <= (x + w) && y <= pointY && pointY <= (y + w))
-            return true;
-        return false;
+        return x <= pointX && pointX <= (x + w) && y <= pointY && pointY <= (y + w);
     }
 }
